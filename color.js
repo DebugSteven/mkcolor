@@ -45,6 +45,19 @@ function getUIFrameCheck() {
     }
 }
 
+// returns a function which evaluates the luminance of a background
+// color to produce either a light or dark theme
+function getThemeMode() {
+    let midpointLum = luminance(crMidpoint);
+    if (document.getElementById('dark-theme').checked) {
+        return function(lum) { return (lum < midpointLum) }
+    } else if (document.getElementById('light-theme').checked) {
+        return function(lum) { return (lum > midpointLum) }
+    } else {
+        return function(lum) { return true; }
+    }
+}
+
 function isDistinct(col1, col2) {
     let cr = contrastRatio(col1, col2);
     let dist = labDistance(col1, col2);
@@ -328,6 +341,7 @@ function randomColorSet() {
     try {
         let limit = getContrastLimit();
         let uiFrameValid = getUIFrameCheck();
+        let validThemeMode = getThemeMode();
         let useAnsi = document.getElementById('use-ansi').checked === true;
         let bgDistinct = document.getElementById('bg-distinct').checked === true;
         let bgDistinctAll = document.getElementById('bg-distinct-all').checked === true;
@@ -340,7 +354,7 @@ function randomColorSet() {
             let col;
             do {
                 col = randomColor(useAnsi);
-            } while (contrastRatio(col, crMidpoint) < midpointRadius);
+            } while (!validThemeMode(luminance(col)) || contrastRatio(col, crMidpoint) < midpointRadius);
             return col;
         }
 
