@@ -90,7 +90,7 @@ function newColor(r, g, b, idx, lab) {
 
 // CMYK or Greyscale
 // pantone offers books to sRGB & HEX codes
-function pmsFromSomeColor {
+function pmsFromSomeColor() {
 
 }
 
