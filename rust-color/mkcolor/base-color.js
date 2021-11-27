@@ -54,12 +54,14 @@ function contrastRatio(col1, col2) {
     return (lighter + 0.05) / (darker + 0.05);
 }
 
+// calculate the perceptable distance between two colors
 function labDistance(col1, col2) {
     return Math.hypot(col1.lab.l - col2.lab.l,
                       col1.lab.a - col2.lab.a,
                       col1.lab.b - col2.lab.b);
 }
 
+// could this be used for a user to pick a color?
 // returns a new RGB color using the given RGB values, and, if present, the given ANSI index
 function newColor(r, g, b, idx, lab) {
     let col = { r: r, g: g, b: b };
@@ -86,13 +88,37 @@ function newColor(r, g, b, idx, lab) {
     return col;
 }
 
+// CMYK or Greyscale
+// pantone offers books to sRGB & HEX codes
+function pmsFromSomeColor {
+
+}
+
+// convert rgb to cmyk
+// this could be used to match to cmyk pantone colors
+function cmykFromColor(col) {
+    var r = (col.r === 0 ? 0 : col.r/255);
+    var g = (col.g === 0 ? 0 : col.g/255);
+    var b = (col.b === 0 ? 0 : col.b/255);
+    var max = Math.max(r,g,b);
+    var min = Math.min(r,g,b);
+
+    var k = 1 - max;
+    var cyan = 1 - r - k / (1 - k);
+    var magenta = 1 - g - k / (1 - k);
+    var yellow = 1 - b - k / (1 - k);
+
+
+}
+
 function hsvFromColor(col) {
     var max = Math.max(col.r, col.g, col.b);
     var min = Math.min(col.r, col.g, col.b);
     var d = max - min;
+
+    var h;
     var s = (max === 0 ? 0 : d / max);
     var v = max / 255;
-    var h;
 
     switch (max) {
         case min:
@@ -112,6 +138,7 @@ function hsvFromColor(col) {
             break;
     }
 
+    // could the color-ish value be figured out in a different way?
     var ish;
 
     if (s < 0.1) {
